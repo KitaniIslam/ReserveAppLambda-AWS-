@@ -37,23 +37,23 @@ exports.handler= (event,context,callback) =>{
     
     // our functions 
     var  intervalSize = function (start,end){
-    let size = (date.subtract(start, end).toMinutes())/30;
-    return size;
-}
-
-var initTable = function (size){
-    t = [];
-     for(var i = 0 ; i<size;i++){
-        t.push(0);
+        let size = (date.subtract(start, end).toMinutes())/30;
+        return size;
     }
-}
 
-//updating the table occupancy
-var upDateTable = function (from,to){
-    for(var i=from;i<to;i++){
-        t[i]=t[i]+1;
+    var initTable = function (size){
+        t = [];
+        for(var i = 0 ; i<size;i++){
+            t.push(0);
+        }
     }
-}
+
+    //updating the table occupancy
+    var upDateTable = function (from,to){
+        for(var i=from;i<to;i++){
+            t[i]=t[i]+1;
+        }
+    }
 
 var Nprice;
 var NnbrPlaceInZone;
@@ -61,14 +61,14 @@ var NnbrPlaceInZone;
  //get zone info (price and nbr place globale)
 var spotinfo = `select price,zoneplace from zone where parkid = ? and zoneid = ?`;
 connection.query(spotinfo, [event.parkId , event.zoneId ], function (error, resultskk, fields) {
-        if (error){ callback("somthing wrong");}
-        else{
-            NnbrPlaceInZone = resultskk[0].zoneplace;
-            Nprice = resultskk[0].price;
-            console.log("results = "+JSON.stringify(resultskk) );
-            console.log("price = "+Nprice);
-            console.log("nbr place = "+NnbrPlaceInZone);
-        }
+    if (error){ callback("somthing wrong");}
+    else{
+        NnbrPlaceInZone = resultskk[0].zoneplace;
+        Nprice = resultskk[0].price;
+        console.log("results = "+JSON.stringify(resultskk) );
+        console.log("price = "+Nprice);
+        console.log("nbr place = "+NnbrPlaceInZone);
+    }
     
 });
 
@@ -92,20 +92,18 @@ var checkDes = function (nbrP){
     var S_Formated = date.format(S, mysqlDateTimeFormat);
     var E_Formated = date.format(E, mysqlDateTimeFormat);
     
-   
-        
-        var sql = `SELECT * FROM reservation where startTime < ? and endTime > ? and zoneid = ? and parkid = ?`; 
-        
-        connection.query(sql, [E_Formated, S_Formated ,event.zoneId ,event.parkId ], function (error, results, fields) {
-        if (error){ callback("somthing wrong");}
-        else{
+    var sql = `SELECT * FROM reservation where startTime < ? and endTime > ? and zoneid = ? and parkid = ?`; 
+    
+    connection.query(sql, [E_Formated, S_Formated ,event.zoneId ,event.parkId ], function (error, results, fields) {
+    if (error){ callback("somthing wrong");}
+    else{
         initTable(intervalSize(E,S));
-           
-            results.forEach(function (reservation){
-                var star = (date.subtract( max(reservation.startTime,S), S).toMinutes())/30 ;
-               var end = ((date.subtract( min(reservation.endTime,E),max(reservation.startTime,S) ).toMinutes())/30) + star ;
-                upDateTable(star,end);
-            });
+        
+        results.forEach(function (reservation){
+            var star = (date.subtract( max(reservation.startTime,S), S).toMinutes())/30 ;
+            var end = ((date.subtract( min(reservation.endTime,E),max(reservation.startTime,S) ).toMinutes())/30) + star ;
+            upDateTable(star,end);
+        });
 
         //calling the checkDes() function (false : mean nbr of place for your zone = nbr occupent interval) 
         let what = checkDes(NnbrPlaceInZone);
@@ -118,25 +116,23 @@ var checkDes = function (nbrP){
                 callback(null,respons) ;
             }else{
 
-            // adding the reservation to your database 
-            var addreservation = `INSERT INTO reservation (startTime, endTime, zoneid,parkid) VALUES (?, ?, ?, ?)`;
-            connection.query(addreservation, [E_Formated, S_Formated ,event.zoneId ,event.parkId ], function (error, results, fields) {
-                if (error){ callback("Somthing Wrong");}
-                else{
-                    let respons ={
-                        "Reservation": true,
-                        "price"      : "$ "+Nprice,
-                        "Zone_ID"    : event.zoneId,
-                        "Park_ID"    : event.parkId,
-                        "Map_Link"   : "http!//........"
+                // adding the reservation to your database 
+                var addreservation = `INSERT INTO reservation (startTime, endTime, zoneid,parkid) VALUES (?, ?, ?, ?)`;
+                connection.query(addreservation, [E_Formated, S_Formated ,event.zoneId ,event.parkId ], function (error, results, fields) {
+                    if (error){ callback("Somthing Wrong");}
+                    else{
+                        let respons ={
+                            "Reservation": true,
+                            "price"      : "$ "+Nprice,
+                            "Zone_ID"    : event.zoneId,
+                            "Park_ID"    : event.parkId,
+                            "Map_Link"   : "http!//........"
+                        }
                     }
-                }
-            });
-
-
+                });
                 callback(null,respons) ;
             }
         }
               
-        });
+    });
 }
