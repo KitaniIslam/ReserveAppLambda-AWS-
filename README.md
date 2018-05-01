@@ -1,7 +1,7 @@
 # Reservation APP for ( AWS Lambda )
 
-A Simple app for Managing Reservation ( e.g : cars parking "not spot by spot" for )
-work for minimale interval (by 30 min) if you need less (check the code "main.js" and change it to "30","15","10"....or any interval you need ) and dont forget to add your information to "config.js" and you are ready to go !!. 
+A Simple app for Managing Reservation ( e.g : cars parking "not spot by spot" )
+work for minimale interval (by 30 min) if you need less (check the code "main.js" and change the "30" to "15","10"....or any interval you need ) and dont forget to add your information to "config.js" and you are ready to go !!. 
 
 ## Init Your Project
 
@@ -35,5 +35,5 @@ work for minimale interval (by 30 min) if you need less (check the code "main.js
 ```
 
 
-# Any Comment or adding value please tell Me :
+# Any Comment or adding value please tell Me !!
 >Email : slmkitani@gmail.com 
