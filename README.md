@@ -1,7 +1,6 @@
 # Reservation APP for ( AWS Lambda )
 
 A Simple app for Managing Reservation ( e.g : cars parking "not spot by spot" )
-work for minimale interval (by 30 min) if you need less (check the code "main.js" and change the "30" to "15","10"....or any interval you need ) and dont forget to add your information to "config.js" and you are ready to go !!. 
 
 ## Init Your Project
 
@@ -18,11 +17,6 @@ work for minimale interval (by 30 min) if you need less (check the code "main.js
 * npm install date-and-time --save
 ~~~
 
-## Things To Know
-
-> This app free to use
-> The "date-and-time" Have an MIT licence
-
 ## Output Example for Successful Reservation
 
 ```JSON
@@ -33,7 +27,3 @@ work for minimale interval (by 30 min) if you need less (check the code "main.js
      "MAP_Link"     :"http://app/eg"   
     }
 ```
-
-
-# Any Comment or adding value please tell Me !!
->Email : slmkitani@gmail.com 
